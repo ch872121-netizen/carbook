@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - VroomVroomRides</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn">Home</a>
+                    <a href="about.html" class="nav-btn">About</a>
+                    <a href="signup.html" class="nav-btn accent active">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="auth-page">
+                <div class="auth-card">
+                    <h2 class="auth-title">Create Account</h2>
+                    <p class="auth-sub">Join VroomVroomRides today</p>
+                    <div class="form-field">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="signup-name" placeholder="Your name">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="signup-email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="signup-password" placeholder="••••••••">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="signup-confirm" placeholder="••••••••">
+                    </div>
+                    <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+                    <div class="auth-switch">
+                        Already have an account? <a href="login.html">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        function handleSignup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+
+            if (app.handleSignup(name, email, password, confirm)) {
+                setTimeout(() => window.location.href = 'login.html', 1500);
+            }
+        }
+    </script>
+</body>
+</html>

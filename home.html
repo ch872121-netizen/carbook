@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VroomVroomRides - Home</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn active">Home</a>
+                    <a href="browse.html" class="nav-btn" id="nav-browse" style="display:none;">Browse</a>
+                    <a href="bookings.html" class="nav-btn" id="nav-bookings" style="display:none;">My Bookings</a>
+                    <a href="about.html" class="nav-btn">About</a>
+                    <a href="admin.html" class="nav-btn" id="nav-admin" style="display:none;">Admin</a>
+                    <a href="login.html" class="nav-btn accent" id="nav-auth">Login</a>
+                    <div class="nav-user" id="nav-user-info" style="display:none;">
+                        <span id="current-user">User</span>
+                        <div class="avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="hero">
+                <div class="hero-badge">🚗 Welcome to VroomVroomRides</div>
+                <h1>Your <span>Perfect Ride</span> Awaits</h1>
+                <p>Book premium cars for your journeys. Affordable, reliable, and always ready.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">8</div>
+                        <div class="hero-stat-label">Premium Cars</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num" id="hero-bookings">0</div>
+                        <div class="hero-stat-label">Total Bookings</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num" id="hero-users">0</div>
+                        <div class="hero-stat-label">Happy Users</div>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+            <center style="margin: 40px 0;">
+                <a href="browse.html" class="confirm-btn" style="max-width: 200px; text-decoration: none; display: inline-block;">Browse Cars Now</a>
+            </center>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('hero-bookings').textContent = app.allBookings.length;
+        document.getElementById('hero-users').textContent = app.allUsers.filter(u => !u.isAdmin).length;
+        
+        if (app.currentUser) {
+            document.getElementById('nav-browse').style.display = 'inline-block';
+            document.getElementById('nav-bookings').style.display = 'inline-block';
+            document.getElementById('nav-auth').href = '#';
+            document.getElementById('nav-auth').textContent = 'Logout';
+            document.getElementById('nav-auth').onclick = (e) => { e.preventDefault(); app.handleLogout(); };
+            document.getElementById('nav-user-info').style.display = 'flex';
+            document.getElementById('current-user').textContent = app.currentUser.name;
+            document.getElementById('user-avatar').textContent = app.currentUser.name.charAt(0);
+            if (app.currentUser.isAdmin) document.getElementById('nav-admin').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

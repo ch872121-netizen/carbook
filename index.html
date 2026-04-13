@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=home.html">
+</head>
+<body>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0B0C10;
+            --surface: #13151A;
+            --surface2: #1C1F27;
+            --border: #2A2D37;
+            --accent: #F5A623;
+            --accent2: #FF5757;
+            --text: #F0F0F5;
+            --muted: #7A7D8A;
+            --success: #3DDC84;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --radius: 14px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        .app { min-height: 100vh; display: flex; flex-direction: column; }
+        .main { flex: 1; padding: 0 24px 48px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        .nav { background: rgba(11,12,16,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 8px; height: 64px; }
+        .logo { font-family: var(--font-head); font-weight: 800; font-size: 1.3rem; color: var(--accent); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+        .nav-links { display: flex; gap: 4px; margin-left: auto; align-items: center; }
+        .nav-btn { background: none; border: none; color: var(--muted); font-family: var(--font-body); font-size: .9rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all .2s; }
+        .nav-btn:hover, .nav-btn.active { color: var(--text); background: var(--surface2); }
+        .nav-btn.accent { background: var(--accent); color: #000; font-weight: 500; }
+        .nav-btn.accent:hover { background: #FFB84D; }
+        .nav-user { display: flex; align-items: center; gap: 10px; font-size: .85rem; color: var(--muted); }
+        .avatar { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; color: #000; }
+
+        .hero { padding: 72px 0 48px; text-align: center; position: relative; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: .8rem; color: var(--accent); margin-bottom: 20px; }
+        .hero h1 { font-family: var(--font-head); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.05; margin-bottom: 16px; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto 32px; }
+        .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+        .hero-stat { text-align: center; }
+        .hero-stat-num { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+        .hero-stat-label { font-size: .8rem; color: var(--muted); }
+
+        .filters { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 32px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+        .filter-input, .filter-select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: .9rem; padding: 9px 12px; border-radius: 8px; outline: none; transition: border .2s; min-width: 140px; }
+        .filter-input:focus, .filter-select:focus { border-color: var(--accent); }
+        .filter-select option { background: var(--surface2); }
+        .toggle-group { display: flex; align-items: center; gap: 8px; }
+        .toggle { position: relative; width: 40px; height: 22px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 11px; cursor: pointer; transition: .3s; }
+        .toggle input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+        .toggle-slider::before { content:''; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: .3s; }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+        .toggle-label { font-size: .88rem; color: var(--text); }
+        .filter-reset { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--muted); padding: 9px 16px; border-radius: 8px; cursor: pointer; font-family: var(--font-body); font-size: .85rem; transition: all .2s; }
+        .filter-reset:hover { border-color: var(--accent2); color: var(--accent2); }
+        .results-count { font-size: .82rem; color: var(--muted); width: 100%; }
+
+        .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .car-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform .25s, box-shadow .25s, border-color .25s; cursor: pointer; position: relative; }
+        .car-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
+        .car-card.unavailable { opacity: .55; cursor: default; }
+        .car-card.unavailable:hover { transform: none; box-shadow: none; border-color: var(--border); }
+        .car-image { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+        .car-badge { position: absolute; top: 10px; right: 10px; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 600; text-transform: uppercase; }
+        .badge-available { background: rgba(61,220,132,.15); color: var(--success); border: 1px solid rgba(61,220,132,.3); }
+        .badge-unavailable { background: rgba(255,87,87,.12); color: var(--accent2); border: 1px solid rgba(255,87,87,.3); }
+        .car-body { padding: 16px; }
+        .car-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .tag { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: .72rem; padding: 2px 8px; border-radius: 4px; }
+        .car-name { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+        .car-desc { font-size: .83rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+        .car-footer { display: flex; align-items: center; justify-content: space-between; }
+        .car-price { font-family: var(--font-head); font-weight: 700; }
+        .car-price span { font-size: 1.3rem; color: var(--accent); }
+        .car-price small { font-size: .75rem; color: var(--muted); }
+        .book-btn { background: var(--accent); color: #000; border: none; padding: 9px 18px; border-radius: 8px; font-family: var(--font-head); font-weight: 700; font-size: .85rem; cursor: pointer; transition: all .2s; }
+        .book-btn:hover { background: #FFB84D; transform: scale(1.04); }
+        .book-btn:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; transform: none; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(6px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn .2s; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: slideUp .25s; }
+        @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+        .modal-header { padding: 24px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+        .modal-close { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .modal-close:hover { color: var(--text); border-color: var(--accent2); }
+        .modal-body { padding: 20px 24px 24px; }
+        .modal-car-emoji { font-size: 3.5rem; display: block; text-align: center; margin-bottom: 8px; }
+        .modal-car-name { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 4px; }
+        .modal-car-desc { text-align: center; color: var(--muted); font-size: .88rem; margin-bottom: 20px; }
+
+        .form-field { margin-bottom: 16px; }
+        .form-label { display: block; font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+        .form-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: .95rem; padding: 11px 14px; border-radius: 10px; outline: none; transition: border .2s; }
+        .form-input:focus { border-color: var(--accent); }
+        .form-input.error { border-color: var(--accent2); }
+        .form-error { font-size: .78rem; color: var(--accent2); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .date-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+        .date-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+        .date-day-label { text-align: center; font-size: .7rem; color: var(--muted); padding: 4px 0; }
+        .date-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: .82rem; cursor: pointer; transition: all .15s; border: 1px solid transparent; }
+        .date-cell:hover:not(.date-disabled):not(.date-booked) { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+        .date-cell.date-selected { background: var(--accent); color: #000; font-weight: 700; }
+        .date-cell.date-in-range { background: rgba(245,166,35,.15); }
+        .date-cell.date-booked { background: rgba(255,87,87,.12); color: var(--accent2); cursor: not-allowed; text-decoration: line-through; }
+        .date-cell.date-disabled { color: var(--border); cursor: not-allowed; }
+        .date-cell.date-today { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+        .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .date-nav-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: var(--font-body); }
+        .date-nav-btn:hover { border-color: var(--accent); }
+        .date-month-label { font-family: var(--font-head); font-weight: 700; font-size: .95rem; }
+
+        .driver-option { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: border .2s; }
+        .driver-option.selected { border-color: var(--accent); background: rgba(245,166,35,.1); }
+        .driver-option-left { display: flex; align-items: center; gap: 10px; }
+        .driver-icon { font-size: 1.4rem; }
+        .driver-option-title { font-weight: 600; font-size: .95rem; }
+        .driver-option-sub { font-size: .78rem; color: var(--muted); }
+        .driver-price { color: var(--accent); font-weight: 700; font-size: .9rem; }
+
+        .booking-summary { background: var(--surface2); border-radius: 10px; padding: 16px; margin: 16px 0; }
+        .summary-row { display: flex; justify-content: space-between; font-size: .88rem; padding: 4px 0; color: var(--muted); }
+        .summary-row.total { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--text); border-top: 1px solid var(--border); margin-top: 8px; padding-top: 10px; }
+        .summary-row.total span:last-child { color: var(--accent); }
+
+        .confirm-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 14px; border-radius: 10px; font-family: var(--font-head); font-weight: 800; font-size: 1rem; cursor: pointer; transition: all .2s; margin-top: 4px; }
+        .confirm-btn:hover { background: #FFB84D; transform: translateY(-1px); }
+        .confirm-btn:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; transform: none; }
+
+        .auth-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px; width: 100%; max-width: 420px; }
+        .auth-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+        .auth-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+        .auth-switch { text-align: center; font-size: .88rem; color: var(--muted); margin-top: 20px; }
+        .auth-switch button { background: none; border: none; color: var(--accent); cursor: pointer; font-family: var(--font-body); font-size: .88rem; text-decoration: underline; }
+        .auth-submit { width: 100%; background: var(--accent); color: #000; border: none; padding: 13px; border-radius: 10px; font-family: var(--font-head); font-weight: 800; font-size: 1rem; cursor: pointer; transition: all .2s; margin-top: 8px; }
+        .auth-submit:hover { background: #FFB84D; }
+
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); animation: slideIn .3s; font-size: .9rem; max-width: 320px; }
+        @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--accent2); }
+        .toast-icon { font-size: 1.1rem; }
+
+        .page-title { font-family: var(--font-head); font-size: 2rem; font-weight: 800; margin-bottom: 6px; margin-top: 40px; }
+        .page-sub { color: var(--muted); font-size: .95rem; margin-bottom: 28px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+        .stat-label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+        .stat-value { font-family: var(--font-head); font-size: 2rem; font-weight: 800; }
+        .stat-value.accent { color: var(--accent); }
+        .stat-value.success { color: var(--success); }
+        .stat-value.red { color: var(--accent2); }
+        .stat-icon { font-size: 1.4rem; margin-bottom: 8px; }
+
+        .bookings-list { display: flex; flex-direction: column; gap: 12px; }
+        .booking-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .booking-emoji { font-size: 2rem; }
+        .booking-info { flex: 1; min-width: 160px; }
+        .booking-name { font-weight: 600; font-size: .95rem; margin-bottom: 2px; }
+        .booking-dates { font-size: .8rem; color: var(--muted); }
+        .booking-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .booking-total { font-family: var(--font-head); font-size: 1.1rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+        .no-bookings { text-align: center; padding: 60px 20px; color: var(--muted); }
+        .no-bookings-icon { font-size: 3rem; margin-bottom: 12px; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: var(--surface2); padding: 12px; text-align: left; font-weight: 600; font-size: .85rem; color: var(--muted); border-bottom: 1px solid var(--border); }
+        .admin-table td { padding: 12px; border-bottom: 1px solid var(--border); }
+        .admin-table tr:hover { background: var(--surface2); }
+
+        .action-btn { background: var(--accent); color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-size: .75rem; cursor: pointer; font-weight: 600; margin-right: 6px; }
+        .action-btn.danger { background: var(--accent2); }
+        .action-btn:hover { opacity: 0.9; }
+
+        .input-group { display: flex; gap: 8px; }
+        .input-group input { flex: 1; }
+        .input-group button { background: var(--accent); color: #000; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .hero { padding: 40px 0 28px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filter-reset { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-inner">
+                <div class="logo" onclick="app.goToPage('home')">
+                    🏁 VroomVroomRides
+                    <span class="logo-dot"></span>
+                </div>
+                <div class="nav-links">
+                    <button class="nav-btn" onclick="app.goToPage('home')" id="nav-home">Home</button>
+                    <button class="nav-btn" onclick="app.goToPage('browse')" id="nav-browse" style="display:none;">Browse</button>
+                    <button class="nav-btn" onclick="app.goToPage('bookings')" id="nav-bookings" style="display:none;">My Bookings</button>
+                    <button class="nav-btn" onclick="app.goToPage('about')" id="nav-about">About</button>
+                    <button class="nav-btn" onclick="app.goToPage('admin')" id="nav-admin" style="display:none;">Admin</button>
+                    <button class="nav-btn accent" onclick="app.toggleAuth()" id="nav-auth">Login</button>
+                    <div class="nav-user" id="nav-user-info" style="display:none;">
+                        <span id="current-user">User</span>
+                        <div class="avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="hero">
+                    <div class="hero-badge">🚗 Welcome to VroomVroomRides</div>
+                    <h1>Your <span>Perfect Ride</span> Awaits</h1>
+                    <p>Book premium cars for your journeys. Affordable, reliable, and always ready.</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-num" id="hero-cars">8</div>
+                            <div class="hero-stat-label">Premium Cars</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-num" id="hero-bookings">0</div>
+                            <div class="hero-stat-label">Total Bookings</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-num" id="hero-users">0</div>
+                            <div class="hero-stat-label">Happy Users</div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <center style="margin: 40px 0;">
+                    <button class="confirm-btn" onclick="app.goToPage('browse')" style="max-width: 200px;">Browse Cars Now</button>
+                </center>
+            </div>
+
+            <!-- Browse Cars Page -->
+            <div id="browse-page" class="page">
+                <div class="page-title">Browse Cars</div>
+                <div class="page-sub">Find the perfect vehicle for your needs</div>
+
+                <!-- Filters -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Car Type</label>
+                        <select class="filter-select" id="filter-type" onchange="app.applyFilters()">
+                            <option value="">All Types</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="MPV">MPV</option>
+                            <option value="Hatchback">Hatchback</option>
+                            <option value="Luxury">Luxury</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Max Price</label>
+                        <input type="number" class="filter-input" id="filter-price" placeholder="Max price" onchange="app.applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Fuel Type</label>
+                        <select class="filter-select" id="filter-fuel" onchange="app.applyFilters()">
+                            <option value="">All Fuels</option>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="CNG">CNG</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-group" style="margin-left: auto;">
+                        <label class="toggle-label">Available Only</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="filter-available" onchange="app.applyFilters()">
+                            <div class="toggle-slider"></div>
+                        </label>
+                    </div>
+
+                    <button class="filter-reset" onclick="app.resetFilters()">Reset Filters</button>
+                </div>
+
+                <div class="results-count" id="results-count"></div>
+                <div class="cars-grid" id="cars-grid"></div>
+            </div>
+
+            <!-- My Bookings Page -->
+            <div id="bookings-page" class="page">
+                <div class="page-title">My Bookings</div>
+                <div class="page-sub">View and manage your car reservations</div>
+                <div class="bookings-list" id="bookings-list"></div>
+            </div>
+
+            <!-- Booking Modal -->
+            <div id="booking-modal" class="modal-overlay" style="display:none;" onclick="if(event.target === this) app.closeBookingModal()">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2>Book Car</h2>
+                        <button class="modal-close" onclick="app.closeBookingModal()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <span class="modal-car-emoji" id="booking-emoji"></span>
+                        <h3 class="modal-car-name" id="booking-car-name"></h3>
+                        <p class="modal-car-desc" id="booking-car-desc"></p>
+
+                        <div class="form-field">
+                            <label class="form-label">Pickup Date</label>
+                            <input type="date" class="form-input" id="booking-pickup" onchange="app.updateBookingSummary()">
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label">Return Date</label>
+                            <input type="date" class="form-input" id="booking-return" onchange="app.updateBookingSummary()">
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label">With Driver?</label>
+                            <div class="driver-option" onclick="app.selectDriver(false)" id="driver-option-no">
+                                <div class="driver-option-left">
+                                    <div class="driver-icon">🚗</div>
+                                    <div>
+                                        <div class="driver-option-title">Self Drive</div>
+                                        <div class="driver-option-sub">Drive yourself</div>
+                                    </div>
+                                </div>
+                                <div class="driver-price">₹0</div>
+                            </div>
+                            <div class="driver-option" onclick="app.selectDriver(true)" id="driver-option-yes">
+                                <div class="driver-option-left">
+                                    <div class="driver-icon">👨‍💼</div>
+                                    <div>
+                                        <div class="driver-option-title">With Driver</div>
+                                        <div class="driver-option-sub">Professional driver included</div>
+                                    </div>
+                                </div>
+                                <div class="driver-price">₹<span id="driver-cost">500</span>/day</div>
+                            </div>
+                        </div>
+
+                        <div class="booking-summary">
+                            <div class="summary-row">
+                                <span>Car Rental:</span>
+                                <span>₹<span id="summary-car-price">0</span></span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Driver Cost:</span>
+                                <span>₹<span id="summary-driver-price">0</span></span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span>₹<span id="summary-total">0</span></span>
+                            </div>
+                        </div>
+
+                        <button class="confirm-btn" onclick="app.confirmBooking()">Confirm Booking</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div id="about-page" class="page">
+                <div class="page-title">About VroomVroomRides</div>
+                <div class="page-sub">Your trusted car rental partner since 2024</div>
+                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; line-height: 1.8; color: var(--muted);">
+                    <p style="margin-bottom: 16px;">🚗 <strong style="color: var(--text);">Premium Fleet:</strong> We offer a diverse range of premium and budget-friendly vehicles to suit every need.</p>
+                    <p style="margin-bottom: 16px;">📱 <strong style="color: var(--text);">Easy Booking:</strong> Book in seconds with our intuitive platform. No hassles, no hidden charges.</p>
+                    <p style="margin-bottom: 16px;">👨‍💼 <strong style="color: var(--text);">Professional Drivers:</strong> Optional professional drivers for a premium experience.</p>
+                    <p style="margin-bottom: 16px;">💳 <strong style="color: var(--text);">Secure Payments:</strong> All transactions are completely secure and encrypted.</p>
+                    <p>🏆 <strong style="color: var(--text);">24/7 Support:</strong> We're here to help you anytime, anywhere.</p>
+                </div>
+            </div>
+
+            <!-- Auth Page -->
+            <div id="auth-page" class="page">
+                <div class="auth-page">
+                    <div class="auth-card">
+                        <div id="login-form">
+                            <h2 class="auth-title">Login</h2>
+                            <p class="auth-sub">Welcome back! Sign in to your account</p>
+                            <div class="form-field">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="login-email" placeholder="your@email.com">
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+                            </div>
+                            <button class="auth-submit" onclick="app.handleLogin()">Sign In</button>
+                            <div class="auth-switch">
+                                Don't have an account? <button onclick="app.switchAuthMode('signup')">Sign Up</button>
+                            </div>
+                        </div>
+
+                        <div id="signup-form" style="display:none;">
+                            <h2 class="auth-title">Create Account</h2>
+                            <p class="auth-sub">Join VroomVroomRides today</p>
+                            <div class="form-field">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" id="signup-name" placeholder="Your name">
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="signup-email" placeholder="your@email.com">
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-input" id="signup-password" placeholder="••••••••">
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" class="form-input" id="signup-confirm" placeholder="••••••••">
+                            </div>
+                            <button class="auth-submit" onclick="app.handleSignup()">Create Account</button>
+                            <div class="auth-switch">
+                                Already have an account? <button onclick="app.switchAuthMode('login')">Sign In</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin-page" class="page">
+                <div class="page-title">Admin Dashboard</div>
+                <div class="page-sub">Manage your car rental business</div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-label">Total Bookings</div>
+                        <div class="stat-value accent" id="admin-total-bookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value success" id="admin-total-revenue">₹0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value accent" id="admin-total-users">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚗</div>
+                        <div class="stat-label">Available Cars</div>
+                        <div class="stat-value success" id="admin-available-cars">0</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button class="nav-btn active" onclick="app.switchAdminTab('bookings')" id="tab-bookings">All Bookings</button>
+                    <button class="nav-btn" onclick="app.switchAdminTab('payments')" id="tab-payments">Payments</button>
+                    <button class="nav-btn" onclick="app.switchAdminTab('users')" id="tab-users">Users</button>
+                </div>
+
+                <!-- Bookings Tab -->
+                <div id="admin-bookings-tab">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Customer</th>
+                                <th>Dates</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-list"></tbody>
+                    </table>
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="admin-payments-tab" style="display:none;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-payments-list"></tbody>
+                    </table>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="admin-users-tab" style="display:none;">
+                    <div style="margin-bottom: 20px; display: flex; gap: 8px;">
+                        <input type="text" class="form-input" id="user-search" placeholder="Search users..." style="max-width: 300px;">
+                        <button class="action-btn" onclick="app.searchUsers()">Search</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Bookings</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // ─── APP STATE ────────────────────────────────────────────────────────────
+        const app = {
+            // Constants
+            CARS: [
+                { id: 1, name: "Swift Dzire", type: "Sedan", price: 1200, available: true, driver: true, seats: 5, fuel: "Petrol", image: "🚗", desc: "Smooth city cruiser, perfect for daily commutes." },
+                { id: 2, name: "Mahindra Thar", type: "SUV", price: 2800, available: true, driver: true, seats: 4, fuel: "Diesel", image: "🛻", desc: "Off-road beast for the adventurous soul." },
+                { id: 3, name: "Toyota Innova", type: "MPV", price: 2200, available: false, driver: true, seats: 7, fuel: "Diesel", image: "🚐", desc: "Family favourite, spacious and reliable." },
+                { id: 4, name: "Hyundai i20", type: "Hatchback", price: 900, available: true, driver: false, seats: 5, fuel: "Petrol", image: "🚙", desc: "Compact and zippy — great mileage in the city." },
+                { id: 5, name: "BMW 3 Series", type: "Luxury", price: 5500, available: true, driver: true, seats: 5, fuel: "Petrol", image: "🏎️", desc: "Luxury on wheels. Turn every head on the road." },
+                { id: 6, name: "Kia Seltos", type: "SUV", price: 2000, available: true, driver: false, seats: 5, fuel: "Petrol", image: "🚘", desc: "Packed with tech, stylish and powerful." },
+                { id: 7, name: "Maruti Ertiga", type: "MPV", price: 1600, available: false, driver: true, seats: 7, fuel: "CNG", image: "🚌", desc: "Budget MPV, ideal for group travel." },
+                { id: 8, name: "Tesla Model 3", type: "Luxury", price: 6000, available: true, driver: false, seats: 5, fuel: "Electric", image: "⚡", desc: "Futuristic EV experience with autopilot assist." },
+            ],
+
+            DRIVER_COST: 500,
+
+            currentUser: null,
+            currentBooking: { carId: null, pickupDate: null, returnDate: null, withDriver: false },
+            allBookings: [],
+            allUsers: [
+                { id: 1, name: "Admin User", email: "admin@vroomvroomrides.com", password: "admin123", bookings: [], isAdmin: true },
+            ],
+
+            // Helper Functions
+            hashPwd: (pwd) => btoa(pwd),
+            today: () => new Date().toISOString().split("T")[0],
+            addDays: (dateStr, n) => {
+                const d = new Date(dateStr);
+                d.setDate(d.getDate() + n);
+                return d.toISOString().split("T")[0];
+            },
+            daysBetween: (a, b) => Math.max(1, Math.ceil((new Date(b) - new Date(a)) / 86400000)),
+
+            storage: {
+                get: (k, fallback) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
+                set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+            },
+
+            init: function() {
+                this.loadData();
+                this.updateStats();
+                this.renderCars();
+            },
+
+            loadData: function() {
+                const savedUsers = this.storage.get('users', this.allUsers);
+                const savedBookings = this.storage.get('bookings', this.allBookings);
+                this.allUsers = savedUsers;
+                this.allBookings = savedBookings;
+            },
+
+            saveData: function() {
+                this.storage.set('users', this.allUsers);
+                this.storage.set('bookings', this.allBookings);
+            },
+
+            goToPage: function(pageName) {
+                if (pageName === 'admin' && (!this.currentUser || !this.currentUser.isAdmin)) {
+                    this.showToast('Only admins can access this page', 'error');
+                    return;
+                }
+                if ((pageName === 'browse' || pageName === 'bookings') && !this.currentUser) {
+                    this.showToast('Please login first', 'error');
+                    this.goToPage('auth');
+                    return;
+                }
+
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(pageName + '-page').classList.add('active');
+                
+                if (pageName === 'bookings') this.renderMyBookings();
+                if (pageName === 'admin') this.renderAdminDashboard();
+                if (pageName === 'browse') this.renderCars();
+
+                window.scrollTo(0, 0);
+            },
+
+            toggleAuth: function() {
+                if (this.currentUser) {
+                    this.currentUser = null;
+                    this.updateNavigation();
+                    this.showToast('Logged out successfully', 'success');
+                    this.goToPage('home');
+                } else {
+                    this.goToPage('auth');
+                }
+            },
+
+            switchAuthMode: function(mode) {
+                document.getElementById('login-form').style.display = mode === 'login' ? 'block' : 'none';
+                document.getElementById('signup-form').style.display = mode === 'signup' ? 'block' : 'none';
+            },
+
+            handleLogin: function() {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                if (!email || !password) {
+                    this.showToast('Please fill all fields', 'error');
+                    return;
+                }
+
+                const user = this.allUsers.find(u => u.email === email && u.password === password);
+                if (user) {
+                    this.currentUser = user;
+                    this.updateNavigation();
+                    this.showToast('Login successful!', 'success');
+                    this.goToPage('home');
+                    document.getElementById('login-email').value = '';
+                    document.getElementById('login-password').value = '';
+                } else {
+                    this.showToast('Invalid credentials', 'error');
+                }
+            },
+
+            handleSignup: function() {
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const confirm = document.getElementById('signup-confirm').value;
+
+                if (!name || !email || !password || !confirm) {
+                    this.showToast('Please fill all fields', 'error');
+                    return;
+                }
+
+                if (password !== confirm) {
+                    this.showToast('Passwords do not match', 'error');
+                    return;
+                }
+
+                if (this.allUsers.find(u => u.email === email)) {
+                    this.showToast('Email already registered', 'error');
+                    return;
+                }
+
+                const newUser = {
+                    id: Math.max(...this.allUsers.map(u => u.id), 0) + 1,
+                    name: name,
+                    email: email,
+                    password: password,
+                    bookings: [],
+                    isAdmin: false,
+                };
+
+                this.allUsers.push(newUser);
+                this.saveData();
+                this.showToast('Account created successfully!', 'success');
+                this.switchAuthMode('login');
+                document.getElementById('signup-name').value = '';
+                document.getElementById('signup-email').value = '';
+                document.getElementById('signup-password').value = '';
+                document.getElementById('signup-confirm').value = '';
+            },
+
+            updateNavigation: function() {
+                if (this.currentUser) {
+                    document.getElementById('nav-auth').textContent = 'Logout';
+                    document.getElementById('nav-user-info').style.display = 'flex';
+                    document.getElementById('current-user').textContent = this.currentUser.name;
+                    document.getElementById('user-avatar').textContent = this.currentUser.name.charAt(0).toUpperCase();
+                    document.getElementById('nav-browse').style.display = 'block';
+                    document.getElementById('nav-bookings').style.display = 'block';
+                    if (this.currentUser.isAdmin) {
+                        document.getElementById('nav-admin').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('nav-auth').textContent = 'Login';
+                    document.getElementById('nav-user-info').style.display = 'none';
+                    document.getElementById('nav-browse').style.display = 'none';
+                    document.getElementById('nav-bookings').style.display = 'none';
+                    document.getElementById('nav-admin').style.display = 'none';
+                }
+            },
+
+            renderCars: function() {
+                const grid = document.getElementById('cars-grid');
+                const filteredCars = this.getFilteredCars();
+                
+                document.getElementById('results-count').textContent = `Showing ${filteredCars.length} cars`;
+
+                grid.innerHTML = filteredCars.map(car => `
+                    <div class="car-card ${!car.available ? 'unavailable' : ''}" onclick="app.openBookingModal(${car.id})">
+                        <div class="car-image">
+                            ${car.image}
+                            <div class="car-badge ${car.available ? 'badge-available' : 'badge-unavailable'}">
+                                ${car.available ? 'Available' : 'Unavailable'}
+                            </div>
+                        </div>
+                        <div class="car-body">
+                            <div class="car-meta">
+                                <span class="tag">${car.type}</span>
+                                <span class="tag">${car.seats} seats</span>
+                                <span class="tag">${car.fuel}</span>
+                            </div>
+                            <h3 class="car-name">${car.name}</h3>
+                            <p class="car-desc">${car.desc}</p>
+                            <div class="car-footer">
+                                <div class="car-price">
+                                    <span>₹${car.price}</span>
+                                    <small>/day</small>
+                                </div>
+                                <button class="book-btn" ${!car.available ? 'disabled' : ''}>
+                                    ${car.available ? 'Book Now' : 'Unavailable'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            getFilteredCars: function() {
+                const typeFilter = document.getElementById('filter-type').value;
+                const priceFilter = document.getElementById('filter-price').value;
+                const fuelFilter = document.getElementById('filter-fuel').value;
+                const availableOnly = document.getElementById('filter-available').checked;
+
+                return this.CARS.filter(car => {
+                    if (typeFilter && car.type !== typeFilter) return false;
+                    if (priceFilter && car.price > parseInt(priceFilter)) return false;
+                    if (fuelFilter && car.fuel !== fuelFilter) return false;
+                    if (availableOnly && !car.available) return false;
+                    return true;
+                });
+            },
+
+            applyFilters: function() {
+                this.renderCars();
+            },
+
+            resetFilters: function() {
+                document.getElementById('filter-type').value = '';
+                document.getElementById('filter-price').value = '';
+                document.getElementById('filter-fuel').value = '';
+                document.getElementById('filter-available').checked = false;
+                this.renderCars();
+            },
+
+            openBookingModal: function(carId) {
+                if (!this.currentUser) {
+                    this.showToast('Please login first', 'error');
+                    this.goToPage('auth');
+                    return;
+                }
+
+                const car = this.CARS.find(c => c.id === carId);
+                if (!car || !car.available) {
+                    this.showToast('Car is not available', 'error');
+                    return;
+                }
+
+                this.currentBooking = { carId: carId, pickupDate: null, returnDate: null, withDriver: false };
+                document.getElementById('booking-emoji').textContent = car.image;
+                document.getElementById('booking-car-name').textContent = car.name;
+                document.getElementById('booking-car-desc').textContent = car.desc;
+                document.getElementById('booking-pickup').value = '';
+                document.getElementById('booking-return').value = '';
+                document.getElementById('driver-option-no').classList.add('selected');
+                document.getElementById('driver-option-yes').classList.remove('selected');
+
+                const minDate = this.today();
+                document.getElementById('booking-pickup').min = minDate;
+                document.getElementById('booking-return').min = minDate;
+
+                document.getElementById('booking-modal').style.display = 'flex';
+                this.updateBookingSummary();
+            },
+
+            closeBookingModal: function() {
+                document.getElementById('booking-modal').style.display = 'none';
+            },
+
+            selectDriver: function(withDriver) {
+                this.currentBooking.withDriver = withDriver;
+                document.getElementById('driver-option-no').classList.toggle('selected', !withDriver);
+                document.getElementById('driver-option-yes').classList.toggle('selected', withDriver);
+                this.updateBookingSummary();
+            },
+
+            updateBookingSummary: function() {
+                const car = this.CARS.find(c => c.id === this.currentBooking.carId);
+                const pickup = document.getElementById('booking-pickup').value;
+                const returnDate = document.getElementById('booking-return').value;
+
+                if (!pickup || !returnDate) {
+                    document.getElementById('summary-car-price').textContent = '0';
+                    document.getElementById('summary-driver-price').textContent = '0';
+                    document.getElementById('summary-total').textContent = '0';
+                    return;
+                }
+
+                const days = this.daysBetween(pickup, returnDate);
+                const carTotal = car.price * days;
+                const driverTotal = this.currentBooking.withDriver ? this.DRIVER_COST * days : 0;
+                const total = carTotal + driverTotal;
+
+                document.getElementById('summary-car-price').textContent = carTotal;
+                document.getElementById('summary-driver-price').textContent = driverTotal;
+                document.getElementById('summary-total').textContent = total;
+            },
+
+            confirmBooking: function() {
+                const pickup = document.getElementById('booking-pickup').value;
+                const returnDate = document.getElementById('booking-return').value;
+
+                if (!pickup || !returnDate) {
+                    this.showToast('Please select dates', 'error');
+                    return;
+                }
+
+                const car = this.CARS.find(c => c.id === this.currentBooking.carId);
+                const days = this.daysBetween(pickup, returnDate);
+                const carTotal = car.price * days;
+                const driverTotal = this.currentBooking.withDriver ? this.DRIVER_COST * days : 0;
+                const total = carTotal + driverTotal;
+
+                const booking = {
+                    id: Math.max(...this.allBookings.map(b => b.id), 0) + 1,
+                    userId: this.currentUser.id,
+                    carId: this.currentBooking.carId,
+                    carName: car.name,
+                    carImage: car.image,
+                    pickupDate: pickup,
+                    returnDate: returnDate,
+                    withDriver: this.currentBooking.withDriver,
+                    total: total,
+                    status: 'Confirmed',
+                    paymentStatus: 'Pending',
+                    createdAt: new Date().toISOString(),
+                };
+
+                this.allBookings.push(booking);
+                this.currentUser.bookings.push(booking.id);
+                this.saveData();
+
+                this.showToast('Booking confirmed!', 'success');
+                this.closeBookingModal();
+                this.updateStats();
+            },
+
+            renderMyBookings: function() {
+                const userBookings = this.allBookings.filter(b => b.userId === this.currentUser.id);
+                const container = document.getElementById('bookings-list');
+
+                if (userBookings.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-bookings">
+                            <div class="no-bookings-icon">🚗</div>
+                            <h3>No bookings yet</h3>
+                            <p>Start by browsing and booking a car</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = userBookings.map(booking => `
+                    <div class="booking-item">
+                        <div class="booking-emoji">${booking.carImage}</div>
+                        <div class="booking-info">
+                            <div class="booking-name">${booking.carName}</div>
+                            <div class="booking-dates">${booking.pickupDate} to ${booking.returnDate}</div>
+                            <div class="booking-tags">
+                                <span class="tag">${booking.withDriver ? 'With Driver' : 'Self Drive'}</span>
+                                <span class="tag">${booking.status}</span>
+                                <span class="tag">${booking.paymentStatus || 'Pending'}</span>
+                            </div>
+                        </div>
+                        <div class="booking-total">₹${booking.total}</div>
+                        <div style="display: flex; gap: 8px; white-space: nowrap;">
+                            <button class="action-btn" onclick="app.payBooking(${booking.id})" style="background: var(--success); color: #000;">Pay</button>
+                            <button class="action-btn danger" onclick="app.cancelBookingCustomer(${booking.id})">Cancel</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            cancelBookingCustomer: function(bookingId) {
+                if (confirm('Are you sure you want to cancel this booking?')) {
+                    this.allBookings = this.allBookings.filter(b => b.id !== bookingId);
+                    this.saveData();
+                    this.renderMyBookings();
+                    this.updateStats();
+                    this.showToast('Booking cancelled successfully', 'success');
+                }
+            },
+
+            payBooking: function(bookingId) {
+                const booking = this.allBookings.find(b => b.id === bookingId);
+                if (booking) {
+                    booking.paymentStatus = 'Paid';
+                    this.saveData();
+                    this.renderMyBookings();
+                    this.showToast(`Payment of ₹${booking.total} completed successfully!`, 'success');
+                }
+            },
+
+            renderAdminDashboard: function() {
+                const totalBookings = this.allBookings.length;
+                const totalRevenue = this.allBookings.reduce((sum, b) => sum + b.total, 0);
+                const totalUsers = this.allUsers.filter(u => !u.isAdmin).length;
+                const availableCars = this.CARS.filter(c => c.available).length;
+
+                document.getElementById('admin-total-bookings').textContent = totalBookings;
+                document.getElementById('admin-total-revenue').textContent = `₹${totalRevenue}`;
+                document.getElementById('admin-total-users').textContent = totalUsers;
+                document.getElementById('admin-available-cars').textContent = availableCars;
+
+                this.renderAdminBookings();
+                this.renderAdminPayments();
+                this.renderAdminUsers();
+            },
+
+            renderAdminBookings: function() {
+                const tbody = document.getElementById('admin-bookings-list');
+                tbody.innerHTML = this.allBookings.map((booking, idx) => {
+                    const user = this.allUsers.find(u => u.id === booking.userId);
+                    return `
+                        <tr>
+                            <td>${booking.carImage} ${booking.carName}</td>
+                            <td>${user ? user.name : 'Unknown'}</td>
+                            <td>${booking.pickupDate} to ${booking.returnDate}</td>
+                            <td>₹${booking.total}</td>
+                            <td>${booking.status}</td>
+                            <td>
+                                <button class="action-btn" onclick="app.cancelBooking(${booking.id})">Cancel</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            },
+
+            renderAdminPayments: function() {
+                const tbody = document.getElementById('admin-payments-list');
+                tbody.innerHTML = this.allBookings.map((booking, idx) => {
+                    const user = this.allUsers.find(u => u.id === booking.userId);
+                    return `
+                        <tr>
+                            <td>#${booking.id}</td>
+                            <td>${user ? user.name : 'Unknown'}</td>
+                            <td>₹${booking.total}</td>
+                            <td>${booking.createdAt.split('T')[0]}</td>
+                            <td>${booking.paymentStatus || 'Pending'}</td>
+                            <td>
+                                <button class="action-btn" onclick="app.processRefund(${booking.id})">Refund</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            },
+
+            renderAdminUsers: function() {
+                const tbody = document.getElementById('admin-users-list');
+                const users = this.allUsers.filter(u => !u.isAdmin);
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.bookings.length}</td>
+                        <td>
+                            <button class="action-btn" onclick="app.viewUserDetails(${user.id})">View Details</button>
+                            <button class="action-btn danger" onclick="app.deleteUser(${user.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            },
+
+            viewUserDetails: function(userId) {
+                const user = this.allUsers.find(u => u.id === userId);
+                if (!user) return;
+                
+                const userBookings = this.allBookings.filter(b => b.userId === userId);
+                alert(`
+CUSTOMER DETAILS
+================
+Name: ${user.name}
+Email: ${user.email}
+Password: ${user.password}
+Phone: N/A
+Bookings: ${user.bookings.length}
+
+BOOKING HISTORY:
+${userBookings.length === 0 ? 'No bookings' : userBookings.map(b => `- ${b.carName} (${b.pickupDate} to ${b.returnDate}) - ₹${b.total}`).join('\n')}
+                `);
+            },
+
+            switchAdminTab: function(tab) {
+                document.getElementById('admin-bookings-tab').style.display = tab === 'bookings' ? 'block' : 'none';
+                document.getElementById('admin-payments-tab').style.display = tab === 'payments' ? 'block' : 'none';
+                document.getElementById('admin-users-tab').style.display = tab === 'users' ? 'block' : 'none';
+
+                document.getElementById('tab-bookings').classList.toggle('active', tab === 'bookings');
+                document.getElementById('tab-payments').classList.toggle('active', tab === 'payments');
+                document.getElementById('tab-users').classList.toggle('active', tab === 'users');
+            },
+
+            cancelBooking: function(bookingId) {
+                if (confirm('Are you sure you want to cancel this booking?')) {
+                    this.allBookings = this.allBookings.filter(b => b.id !== bookingId);
+                    this.saveData();
+                    this.renderAdminBookings();
+                    this.updateStats();
+                    this.showToast('Booking cancelled', 'success');
+                }
+            },
+
+            processRefund: function(bookingId) {
+                if (confirm('Process refund for this booking?')) {
+                    this.showToast('Refund processed successfully', 'success');
+                }
+            },
+
+            deleteUser: function(userId) {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    this.allUsers = this.allUsers.filter(u => u.id !== userId);
+                    this.allBookings = this.allBookings.filter(b => b.userId !== userId);
+                    this.saveData();
+                    this.renderAdminUsers();
+                    this.updateStats();
+                    this.showToast('User deleted', 'success');
+                }
+            },
+
+            searchUsers: function() {
+                const query = document.getElementById('user-search').value.toLowerCase();
+                if (!query) {
+                    this.renderAdminUsers();
+                    return;
+                }
+
+                const tbody = document.getElementById('admin-users-list');
+                const users = this.allUsers.filter(u => !u.isAdmin && (u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)));
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.bookings.length}</td>
+                        <td>
+                            <button class="action-btn danger" onclick="app.deleteUser(${user.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            },
+
+            updateStats: function() {
+                document.getElementById('hero-bookings').textContent = this.allBookings.length;
+                document.getElementById('hero-users').textContent = this.allUsers.filter(u => !u.isAdmin).length;
+            },
+
+            showToast: function(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <span class="toast-icon">${type === 'success' ? '✓' : '✕'}</span>
+                    <span>${message}</span>
+                `;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            },
+        };
+
+        // Initialize app
+        app.init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Cars - VroomVroomRides</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn">Home</a>
+                    <a href="browse.html" class="nav-btn active">Browse</a>
+                    <a href="bookings.html" class="nav-btn">My Bookings</a>
+                    <a href="about.html" class="nav-btn">About</a>
+                    <a href="admin.html" class="nav-btn" id="nav-admin" style="display:none;">Admin</a>
+                    <a href="#" class="nav-btn accent" id="nav-auth" onclick="handleAuthClick(event)">Logout</a>
+                    <div class="nav-user" id="nav-user-info">
+                        <span id="current-user">User</span>
+                        <div class="avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="page-title">Browse Cars</div>
+            <div class="page-sub">Find the perfect vehicle for your needs</div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Car Type</label>
+                    <select class="filter-select" id="filter-type" onchange="applyFilters()">
+                        <option value="">All Types</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="MPV">MPV</option>
+                        <option value="Hatchback">Hatchback</option>
+                        <option value="Luxury">Luxury</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Max Price</label>
+                    <input type="number" class="filter-input" id="filter-price" placeholder="Max price" onchange="applyFilters()">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Fuel Type</label>
+                    <select class="filter-select" id="filter-fuel" onchange="applyFilters()">
+                        <option value="">All Fuels</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="CNG">CNG</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
+                <div class="toggle-group" style="margin-left: auto;">
+                    <label class="toggle-label">Available Only</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="filter-available" onchange="applyFilters()">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+                <button class="filter-reset" onclick="resetFilters()">Reset Filters</button>
+            </div>
+
+            <div class="results-count" id="results-count"></div>
+            <div class="cars-grid" id="cars-grid"></div>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal-overlay" style="display:none;" onclick="if(event.target === this) closeBookingModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Book Car</h2>
+                <button class="modal-close" onclick="closeBookingModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <span class="modal-car-emoji" id="booking-emoji"></span>
+                <h3 class="modal-car-name" id="booking-car-name"></h3>
+                <p class="modal-car-desc" id="booking-car-desc"></p>
+
+                <div class="form-field">
+                    <label class="form-label">Pickup Date</label>
+                    <input type="date" class="form-input" id="booking-pickup" onchange="updateBookingSummary()">
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Return Date</label>
+                    <input type="date" class="form-input" id="booking-return" onchange="updateBookingSummary()">
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">With Driver?</label>
+                    <div class="driver-option selected" onclick="selectDriver(false)" id="driver-option-no">
+                        <div class="driver-option-left">
+                            <div class="driver-icon">🚗</div>
+                            <div>
+                                <div class="driver-option-title">Self Drive</div>
+                                <div class="driver-option-sub">Drive yourself</div>
+                            </div>
+                        </div>
+                        <div class="driver-price">₹0</div>
+                    </div>
+                    <div class="driver-option" onclick="selectDriver(true)" id="driver-option-yes">
+                        <div class="driver-option-left">
+                            <div class="driver-icon">👨‍💼</div>
+                            <div>
+                                <div class="driver-option-title">With Driver</div>
+                                <div class="driver-option-sub">Professional driver included</div>
+                            </div>
+                        </div>
+                        <div class="driver-price">₹<span id="driver-cost">500</span>/day</div>
+                    </div>
+                </div>
+
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <span>Car Rental:</span>
+                        <span>₹<span id="summary-car-price">0</span></span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Driver Cost:</span>
+                        <span>₹<span id="summary-driver-price">0</span></span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>₹<span id="summary-total">0</span></span>
+                    </div>
+                </div>
+
+                <button class="confirm-btn" onclick="confirmBooking()">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        if (!app.currentUser) window.location.href = 'login.html';
+
+        function renderCars() {
+            const typeFilter = document.getElementById('filter-type').value;
+            const priceFilter = document.getElementById('filter-price').value;
+            const fuelFilter = document.getElementById('filter-fuel').value;
+            const availableOnly = document.getElementById('filter-available').checked;
+
+            const filteredCars = app.CARS.filter(car => {
+                if (typeFilter && car.type !== typeFilter) return false;
+                if (priceFilter && car.price > parseInt(priceFilter)) return false;
+                if (fuelFilter && car.fuel !== fuelFilter) return false;
+                if (availableOnly && !car.available) return false;
+                return true;
+            });
+
+            document.getElementById('results-count').textContent = `Showing ${filteredCars.length} cars`;
+            const grid = document.getElementById('cars-grid');
+            grid.innerHTML = filteredCars.map(car => `
+                <div class="car-card ${!car.available ? 'unavailable' : ''}" onclick="app.openBookingModal(${car.id})">
+                    <div class="car-image">
+                        ${car.image}
+                        <div class="car-badge ${car.available ? 'badge-available' : 'badge-unavailable'}">
+                            ${car.available ? 'Available' : 'Unavailable'}
+                        </div>
+                    </div>
+                    <div class="car-body">
+                        <div class="car-meta">
+                            <span class="tag">${car.type}</span>
+                            <span class="tag">${car.seats} seats</span>
+                            <span class="tag">${car.fuel}</span>
+                        </div>
+                        <h3 class="car-name">${car.name}</h3>
+                        <p class="car-desc">${car.desc}</p>
+                        <div class="car-footer">
+                            <div class="car-price"><span>₹${car.price}</span><small>/day</small></div>
+                            <button class="book-btn" ${!car.available ? 'disabled' : ''}>
+                                ${car.available ? 'Book Now' : 'Unavailable'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyFilters() { renderCars(); }
+        function resetFilters() {
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-price').value = '';
+            document.getElementById('filter-fuel').value = '';
+            document.getElementById('filter-available').checked = false;
+            renderCars();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').style.display = 'none';
+        }
+
+        function selectDriver(withDriver) {
+            app.currentBooking.withDriver = withDriver;
+            document.getElementById('driver-option-no').classList.toggle('selected', !withDriver);
+            document.getElementById('driver-option-yes').classList.toggle('selected', withDriver);
+            updateBookingSummary();
+        }
+
+        function updateBookingSummary() {
+            const car = app.CARS.find(c => c.id === app.currentBooking.carId);
+            const pickup = document.getElementById('booking-pickup').value;
+            const returnDate = document.getElementById('booking-return').value;
+
+            if (!pickup || !returnDate) {
+                document.getElementById('summary-car-price').textContent = '0';
+                document.getElementById('summary-driver-price').textContent = '0';
+                document.getElementById('summary-total').textContent = '0';
+                return;
+            }
+
+            const days = app.daysBetween(pickup, returnDate);
+            const carTotal = car.price * days;
+            const driverTotal = app.currentBooking.withDriver ? app.DRIVER_COST * days : 0;
+            const total = carTotal + driverTotal;
+
+            document.getElementById('summary-car-price').textContent = carTotal;
+            document.getElementById('summary-driver-price').textContent = driverTotal;
+            document.getElementById('summary-total').textContent = total;
+        }
+
+        function confirmBooking() {
+            const pickup = document.getElementById('booking-pickup').value;
+            const returnDate = document.getElementById('booking-return').value;
+
+            if (!pickup || !returnDate) {
+                app.showToast('Please select dates', 'error');
+                return;
+            }
+
+            const car = app.CARS.find(c => c.id === app.currentBooking.carId);
+            const days = app.daysBetween(pickup, returnDate);
+            const carTotal = car.price * days;
+            const driverTotal = app.currentBooking.withDriver ? app.DRIVER_COST * days : 0;
+            const total = carTotal + driverTotal;
+
+            const booking = {
+                id: Math.max(...app.allBookings.map(b => b.id), 0) + 1,
+                userId: app.currentUser.id,
+                carId: app.currentBooking.carId,
+                carName: car.name,
+                carImage: car.image,
+                pickupDate: pickup,
+                returnDate: returnDate,
+                withDriver: app.currentBooking.withDriver,
+                total: total,
+                status: 'Confirmed',
+                paymentStatus: 'Pending',
+                createdAt: new Date().toISOString(),
+            };
+
+            app.allBookings.push(booking);
+            app.currentUser.bookings.push(booking.id);
+            app.saveData();
+            app.showToast('Booking confirmed!', 'success');
+            closeBookingModal();
+        }
+
+        function handleAuthClick(e) {
+            e.preventDefault();
+            app.handleLogout();
+        }
+
+        document.getElementById('current-user').textContent = app.currentUser.name;
+        document.getElementById('user-avatar').textContent = app.currentUser.name.charAt(0);
+        if (app.currentUser.isAdmin) document.getElementById('nav-admin').style.display = 'inline-block';
+        renderCars();
+    </script>
+</body>
+</html>

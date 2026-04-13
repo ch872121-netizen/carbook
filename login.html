@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VroomVroomRides</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn">Home</a>
+                    <a href="about.html" class="nav-btn">About</a>
+                    <a href="login.html" class="nav-btn accent active">Login</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="auth-page">
+                <div class="auth-card">
+                    <div id="login-form">
+                        <h2 class="auth-title">Login</h2>
+                        <p class="auth-sub">Welcome back! Sign in to your account</p>
+                        <div class="form-field">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="login-email" placeholder="your@email.com">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+                        </div>
+                        <button class="auth-submit" onclick="handleLogin()">Sign In</button>
+                        <div class="auth-sub" style="text-align: center; margin-top: 20px; color: var(--muted); font-size: .85rem;">
+                            Demo: admin@vroomvroomrides.com / admin123
+                        </div>
+                        <div class="auth-switch">
+                            Don't have an account? <a href="signup.html">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (app.handleLogin(email, password)) {
+                setTimeout(() => window.location.href = 'browse.html', 1000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - VroomVroomRides</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn">Home</a>
+                    <a href="browse.html" class="nav-btn" id="nav-browse" style="display:none;">Browse</a>
+                    <a href="bookings.html" class="nav-btn" id="nav-bookings" style="display:none;">My Bookings</a>
+                    <a href="about.html" class="nav-btn active">About</a>
+                    <a href="admin.html" class="nav-btn" id="nav-admin" style="display:none;">Admin</a>
+                    <a href="#" class="nav-btn accent" id="nav-auth" onclick="handleAuthClick(event)">Login</a>
+                    <div class="nav-user" id="nav-user-info" style="display:none;">
+                        <span id="current-user">User</span>
+                        <div class="avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="page-title">About VroomVroomRides</div>
+            <div class="page-sub">Your trusted car rental partner since 2024</div>
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; line-height: 1.8; color: var(--muted);">
+                <p style="margin-bottom: 16px;">🚗 <strong style="color: var(--text);">Premium Fleet:</strong> We offer a diverse range of premium and budget-friendly vehicles to suit every need.</p>
+                <p style="margin-bottom: 16px;">📱 <strong style="color: var(--text);">Easy Booking:</strong> Book in seconds with our intuitive platform. No hassles, no hidden charges.</p>
+                <p style="margin-bottom: 16px;">👨‍💼 <strong style="color: var(--text);">Professional Drivers:</strong> Optional professional drivers for a premium experience.</p>
+                <p style="margin-bottom: 16px;">💳 <strong style="color: var(--text);">Secure Payments:</strong> All transactions are completely secure and encrypted.</p>
+                <p>🏆 <strong style="color: var(--text);">24/7 Support:</strong> We're here to help you anytime, anywhere.</p>
+            </div>
+
+            <!-- Designer Credits Section -->
+            <div style="background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; margin-top: 48px; text-align: center;">
+                <div style="margin-bottom: 24px;">
+                    <img src="C:\Users\Harsh\Downloads\Harshchougule.jpeg" alt="Designer" style="width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--accent); object-fit: cover; box-shadow: 0 8px 24px rgba(245, 166, 35, 0.2);">
+                </div>
+                <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em;">Designed & Developed By</p>
+                <h3 style="font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-bottom: 12px;">Raj Chougule</h3>
+                <p style="font-size: 0.95rem; color: var(--muted);">Full Stack Developer | UI/UX Designer</p>
+                <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em;">Follow me : harshchougule_</p>
+                <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
+                    <span style="background: var(--surface); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border);">React</span>
+                    <span style="background: var(--surface); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border);">JavaScript</span>
+                    <span style="background: var(--surface); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border);">UI Design</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        function handleAuthClick(e) {
+            e.preventDefault();
+            if (app.currentUser) {
+                app.handleLogout();
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        if (app.currentUser) {
+            document.getElementById('nav-browse').style.display = 'inline-block';
+            document.getElementById('nav-bookings').style.display = 'inline-block';
+            document.getElementById('nav-auth').href = '#';
+            document.getElementById('nav-auth').textContent = 'Logout';
+            document.getElementById('nav-user-info').style.display = 'flex';
+            document.getElementById('current-user').textContent = app.currentUser.name;
+            document.getElementById('user-avatar').textContent = app.currentUser.name.charAt(0);
+            if (app.currentUser.isAdmin) document.getElementById('nav-admin').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

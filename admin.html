@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - VroomVroomRides</title>
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="home.html" class="logo">🏁 VroomVroomRides <span class="logo-dot"></span></a>
+                <div class="nav-links">
+                    <a href="home.html" class="nav-btn">Home</a>
+                    <a href="admin.html" class="nav-btn active">Admin</a>
+                    <a href="#" class="nav-btn accent" id="nav-auth" onclick="handleAuthClick(event)">Logout</a>
+                    <div class="nav-user" id="nav-user-info">
+                        <span id="current-user">Admin</span>
+                        <div class="avatar" id="user-avatar">A</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main">
+            <div class="page-title">Admin Dashboard</div>
+            <div class="page-sub">Manage your car rental business</div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-label">Total Bookings</div>
+                    <div class="stat-value accent" id="admin-total-bookings">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value success" id="admin-total-revenue">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value accent" id="admin-total-users">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚗</div>
+                    <div class="stat-label">Available Cars</div>
+                    <div class="stat-value success" id="admin-available-cars">0</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="nav-btn active" onclick="switchTab('bookings')" id="tab-bookings">All Bookings</button>
+                <button class="nav-btn" onclick="switchTab('payments')" id="tab-payments">Payments</button>
+                <button class="nav-btn" onclick="switchTab('users')" id="tab-users">Users</button>
+                <button class="nav-btn" onclick="switchTab('cars')" id="tab-cars">Manage Cars</button>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="admin-bookings-tab">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Car</th>
+                            <th>Customer</th>
+                            <th>Dates</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-bookings-list"></tbody>
+                </table>
+            </div>
+
+            <!-- Payments Tab -->
+            <div id="admin-payments-tab" style="display:none;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-payments-list"></tbody>
+                </table>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="admin-users-tab" style="display:none;">
+                <div style="margin-bottom: 20px; display: flex; gap: 8px;">
+                    <input type="text" class="form-input" id="user-search" placeholder="Search users..." style="max-width: 300px;">
+                    <button class="action-btn" onclick="searchUsers()">Search</button>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Bookings</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-list"></tbody>
+                </table>
+            </div>
+
+            <!-- Manage Cars Tab -->
+            <div id="admin-cars-tab" style="display:none;">
+                <!-- Add Car Form -->
+                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 32px;">
+                    <h3 style="font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text);">➕ Add New Car</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-label">Car Name</label>
+                            <input type="text" class="form-input" id="car-name" placeholder="e.g., Swift Dzire">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Car Type</label>
+                            <select class="form-input" id="car-type">
+                                <option value="">Select Type</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="SUV">SUV</option>
+                                <option value="MPV">MPV</option>
+                                <option value="Hatchback">Hatchback</option>
+                                <option value="Luxury">Luxury</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-label">Price per Day (₹)</label>
+                            <input type="number" class="form-input" id="car-price" placeholder="1200">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Seats</label>
+                            <input type="number" class="form-input" id="car-seats" placeholder="5" min="2" max="8">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-label">Fuel Type</label>
+                            <select class="form-input" id="car-fuel">
+                                <option value="">Select Fuel</option>
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="CNG">CNG</option>
+                                <option value="Electric">Electric</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Car Emoji/Icon</label>
+                            <input type="text" class="form-input" id="car-image" placeholder="🚗">
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-input" id="car-desc" placeholder="Short description of the car">
+                    </div>
+
+                    <div style="display: flex; gap: 16px; margin-top: 20px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="car-driver" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="color: var(--text); font-size: 0.9rem;">Driver Service Available</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="car-available" checked style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="color: var(--text); font-size: 0.9rem;">Available Now</span>
+                        </label>
+                    </div>
+
+                    <button class="action-btn" onclick="addNewCar()" style="background: var(--accent); margin-top: 20px; padding: 10px 24px; font-weight: 700;">
+                        ➕ Add Car
+                    </button>
+                </div>
+
+                <!-- Cars List -->
+                <h3 style="font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: var(--text);">📋 All Cars</h3>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Price/Day</th>
+                                <th>Seats</th>
+                                <th>Fuel</th>
+                                <th>Driver</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-cars-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="app.js"></script>
+    <script>
+        if (!app.currentUser || !app.currentUser.isAdmin) {
+            window.location.href = 'home.html';
+        }
+
+        function updateDashboard() {
+            const totalBookings = app.allBookings.length;
+            const totalRevenue = app.allBookings.reduce((sum, b) => sum + b.total, 0);
+            const totalUsers = app.allUsers.filter(u => !u.isAdmin).length;
+            const availableCars = app.CARS.filter(c => c.available).length;
+
+            document.getElementById('admin-total-bookings').textContent = totalBookings;
+            document.getElementById('admin-total-revenue').textContent = `₹${totalRevenue}`;
+            document.getElementById('admin-total-users').textContent = totalUsers;
+            document.getElementById('admin-available-cars').textContent = availableCars;
+
+            renderBookings();
+            renderPayments();
+            renderUsers();
+        }
+
+        function renderBookings() {
+            const tbody = document.getElementById('admin-bookings-list');
+            tbody.innerHTML = app.allBookings.map((booking) => {
+                const user = app.allUsers.find(u => u.id === booking.userId);
+                return `
+                    <tr>
+                        <td>${booking.carImage} ${booking.carName}</td>
+                        <td>${user ? user.name : 'Unknown'}</td>
+                        <td>${booking.pickupDate} to ${booking.returnDate}</td>
+                        <td>₹${booking.total}</td>
+                        <td>${booking.status}</td>
+                        <td>
+                            <button class="action-btn" onclick="cancelBooking(${booking.id})">Cancel</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPayments() {
+            const tbody = document.getElementById('admin-payments-list');
+            tbody.innerHTML = app.allBookings.map((booking) => {
+                const user = app.allUsers.find(u => u.id === booking.userId);
+                return `
+                    <tr>
+                        <td>#${booking.id}</td>
+                        <td>${user ? user.name : 'Unknown'}</td>
+                        <td>₹${booking.total}</td>
+                        <td>${booking.createdAt.split('T')[0]}</td>
+                        <td>${booking.paymentStatus || 'Pending'}</td>
+                        <td>
+                            <button class="action-btn" onclick="processRefund(${booking.id})">Refund</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('admin-users-list');
+            const users = app.allUsers.filter(u => !u.isAdmin);
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td><code style="background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-size: .8rem;">${user.password}</code></td>
+                    <td>${user.bookings.length}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewUserDetails(${user.id})">Details</button>
+                        <button class="action-btn danger" onclick="deleteUser(${user.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('admin-bookings-tab').style.display = tab === 'bookings' ? 'block' : 'none';
+            document.getElementById('admin-payments-tab').style.display = tab === 'payments' ? 'block' : 'none';
+            document.getElementById('admin-users-tab').style.display = tab === 'users' ? 'block' : 'none';
+            document.getElementById('admin-cars-tab').style.display = tab === 'cars' ? 'block' : 'none';
+
+            document.getElementById('tab-bookings').classList.toggle('active', tab === 'bookings');
+            document.getElementById('tab-payments').classList.toggle('active', tab === 'payments');
+            document.getElementById('tab-users').classList.toggle('active', tab === 'users');
+            document.getElementById('tab-cars').classList.toggle('active', tab === 'cars');
+
+            if (tab === 'cars') {
+                renderCars();
+            }
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('Cancel this booking?')) {
+                app.allBookings = app.allBookings.filter(b => b.id !== bookingId);
+                app.saveData();
+                updateDashboard();
+                app.showToast('Booking cancelled', 'success');
+            }
+        }
+
+        function processRefund(bookingId) {
+            if (confirm('Process refund?')) {
+                app.showToast('Refund processed successfully', 'success');
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Delete this user?')) {
+                app.allUsers = app.allUsers.filter(u => u.id !== userId);
+                app.allBookings = app.allBookings.filter(b => b.userId !== userId);
+                app.saveData();
+                updateDashboard();
+                app.showToast('User deleted', 'success');
+            }
+        }
+
+        function viewUserDetails(userId) {
+            const user = app.allUsers.find(u => u.id === userId);
+            if (user) {
+                const userBookings = app.allBookings.filter(b => b.userId === userId);
+                alert(`CUSTOMER DETAILS\n================\nName: ${user.name}\nEmail: ${user.email}\nPassword: ${user.password}\nPhone: N/A\nBookings: ${user.bookings.length}\n\nBOOKING HISTORY:\n${userBookings.length === 0 ? 'No bookings' : userBookings.map(b => `- ${b.carName} (${b.pickupDate} to ${b.returnDate}) - ₹${b.total}`).join('\n')}`);
+            }
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('user-search').value.toLowerCase();
+            const tbody = document.getElementById('admin-users-list');
+            if (!query) {
+                renderUsers();
+                return;
+            }
+            const users = app.allUsers.filter(u => !u.isAdmin && (u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)));
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td><code style="background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-size: .8rem;">${user.password}</code></td>
+                    <td>${user.bookings.length}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewUserDetails(${user.id})">Details</button>
+                        <button class="action-btn danger" onclick="deleteUser(${user.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleAuthClick(e) {
+            e.preventDefault();
+            app.handleLogout();
+        }
+
+        function renderCars() {
+            const tbody = document.getElementById('admin-cars-list');
+            tbody.innerHTML = app.CARS.map(car => `
+                <tr>
+                    <td style="font-size: 1.5rem;">${car.image}</td>
+                    <td><strong>${car.name}</strong></td>
+                    <td>${car.type}</td>
+                    <td>₹${car.price}</td>
+                    <td>${car.seats}</td>
+                    <td>${car.fuel}</td>
+                    <td>${car.driver ? '✅ Yes' : '❌ No'}</td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; ${car.available ? 'background: var(--success); color: #000;' : 'background: var(--accent2); color: #fff;'} font-size: 0.8rem; font-weight: 600;">
+                            ${car.available ? 'Available' : 'Unavailable'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn" onclick="toggleCarAvailability(${car.id})">${car.available ? 'Disable' : 'Enable'}</button>
+                        <button class="action-btn danger" onclick="deleteCarAdmin(${car.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addNewCar() {
+            const carData = {
+                name: document.getElementById('car-name').value,
+                type: document.getElementById('car-type').value,
+                price: document.getElementById('car-price').value,
+                seats: document.getElementById('car-seats').value,
+                fuel: document.getElementById('car-fuel').value,
+                image: document.getElementById('car-image').value,
+                desc: document.getElementById('car-desc').value,
+                driver: document.getElementById('car-driver').checked,
+                available: document.getElementById('car-available').checked,
+            };
+
+            if (app.addCar(carData)) {
+                // Clear form
+                document.getElementById('car-name').value = '';
+                document.getElementById('car-type').value = '';
+                document.getElementById('car-price').value = '';
+                document.getElementById('car-seats').value = '';
+                document.getElementById('car-fuel').value = '';
+                document.getElementById('car-image').value = '🚗';
+                document.getElementById('car-desc').value = '';
+                document.getElementById('car-driver').checked = false;
+                document.getElementById('car-available').checked = true;
+                
+                renderCars();
+                updateDashboard();
+            }
+        }
+
+        function toggleCarAvailability(carId) {
+            const car = app.CARS.find(c => c.id === carId);
+            if (car) {
+                app.updateCarAvailability(carId, !car.available);
+                renderCars();
+                updateDashboard();
+            }
+        }
+
+        function deleteCarAdmin(carId) {
+            if (app.deleteCar(carId)) {
+                renderCars();
+                updateDashboard();
+            }
+        }
+
+        document.getElementById('current-user').textContent = app.currentUser.name;
+        document.getElementById('user-avatar').textContent = app.currentUser.name.charAt(0);
+        updateDashboard();
+    </script>
+</body>
+</html>
